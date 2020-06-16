@@ -4,7 +4,7 @@
 %define girayatananame	%mklibname ayatana-appindicator3-gir %{api}
 %define develname	%mklibname ayatana-appindicator3 -d
 
-%bcond_without mono
+%bcond_with mono
 
 Name:		libayatana-appindicator
 Version:	0.5.4
