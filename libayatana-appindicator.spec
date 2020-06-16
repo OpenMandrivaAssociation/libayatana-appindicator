@@ -119,7 +119,7 @@ ayatana-appindicator-sharp library.
 %autosetup -p1
 
 %build
-NOCONFIGURE=1 ./autogen.sh
+#NOCONFIGURE=1 ./autogen.sh
 
 %if %{with mono}
 export CSC=%{_bindir}/mcs
