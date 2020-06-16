@@ -1,0 +1,487 @@
+Description: Don't build or test anything Python2 related.
+Author: Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
+
+--- a/bindings/Makefile.am
++++ b/bindings/Makefile.am
+@@ -3,7 +3,6 @@
+ 	vala
+ else
+ SUBDIRS =		\
+-	python		\
+ 	vala
+ endif
+ 
+--- a/bindings/python/Makefile.am
++++ /dev/null
+@@ -1,40 +0,0 @@
+-defsdir = $(datadir)/pygtk/2.0/defs
+-defs_DATA = ayatana_appindicator.defs
+-
+-#CFLAGS = -Wall -Werror
+-INCLUDES = \
+-		-I$(top_srcdir)/src \
+-        -DG_LOG_DOMAIN=\"ayatana-appindicator-python\" \
+-        -DDATADIR=\"$(datadir)\" \
+-        -DLIBDIR=\"$(libdir)\" \
+-        $(APPINDICATOR_PYTHON_CFLAGS) \
+-        $(PYTHON_INCLUDES)
+-
+-pkgpythondir = $(pyexecdir)
+-pkgpyexecdir = $(pyexecdir)
+-
+-pkgappindicatordir = $(pkgpythondir)/ayatana_appindicator
+-pkgappindicator_PYTHON = __init__.py
+-
+-appindicatordir = $(pkgpyexecdir)/ayatana_appindicator
+-appindicator_LTLIBRARIES = _ayatana_appindicator.la
+-
+-_ayatana_appindicator_la_LDFLAGS = -module -avoid-version -export-symbols-regex init_ayatana_appindicator
+-_ayatana_appindicator_la_LIBADD = $(APPINDICATOR_PYTHON_LIBS) -L$(top_builddir)/src/.libs -layatana-appindicator
+-_ayatana_appindicator_la_SOURCES = ayatana_appindicatormodule.c
+-nodist__ayatana_appindicator_la_SOURCES = ayatana_appindicator.c
+-
+-CLEANFILES = ayatana_appindicator.c
+-DISTCLEANFILES = Makefile.in
+-EXTRA_DIST = ayatana_appindicator.override.in appindicator-arg-types.py $(defs_DATA)
+-ayatana_appindicator.c: $(defs_DATA) ayatana_appindicator.override
+-
+-%.c: %.defs
+-	($(PYGTK_CODEGEN) \
+-		--register $(PYGTK_DEFSDIR)/gtk-types.defs \
+-		--register $(PYGTK_DEFSDIR)/gdk-types.defs \
+-		--load-types $(srcdir)/appindicator-arg-types.py \
+-	    --override $*.override \
+-	    --prefix py$* $(srcdir)/$*.defs) > gen-$*.c \
+-	 && cp gen-$*.c $*.c \
+-	 && rm -f gen-$*.c
+--- a/bindings/python/__init__.py
++++ /dev/null
+@@ -1,27 +0,0 @@
+-# Python bindings for libappindicator.
+-# 
+-# Copyright 2009 Canonical Ltd.
+-# 
+-# Authors:
+-#     Eitan Isaacson <eitan@ascender.com>
+-#     Neil Jagdish Patel <neil.patel@canonical.com>
+-# 
+-# This program is free software: you can redistribute it and/or modify it 
+-# under the terms of either or both of the following licenses:
+-# 
+-# 1) the GNU Lesser General Public License version 3, as published by the 
+-# Free Software Foundation; and/or
+-# 2) the GNU Lesser General Public License version 2.1, as published by 
+-# the Free Software Foundation.
+-# 
+-# This program is distributed in the hope that it will be useful, but 
+-# WITHOUT ANY WARRANTY; without even the implied warranties of 
+-# MERCHANTABILITY, SATISFACTORY QUALITY or FITNESS FOR A PARTICULAR 
+-# PURPOSE.  See the applicable version of the GNU Lesser General Public 
+-# License for more details.
+-# 
+-# You should have received a copy of both the GNU Lesser General Public 
+-# License version 3 and version 2.1 along with this program.  If not, see 
+-# <http://www.gnu.org/licenses/>
+-
+-from _ayatana_appindicator import *
+--- a/bindings/python/appindicator-arg-types.py
++++ /dev/null
+@@ -1,27 +0,0 @@
+-# Python bindings for libayatana-appindicator.
+-# 
+-# Copyright 2009 Canonical Ltd.
+-# 
+-# Authors:
+-#     Eitan Isaacson <eitan@ascender.com>
+-# 
+-# This program is free software: you can redistribute it and/or modify it 
+-# under the terms of either or both of the following licenses:
+-# 
+-# 1) the GNU Lesser General Public License version 3, as published by the 
+-# Free Software Foundation; and/or
+-# 2) the GNU Lesser General Public License version 2.1, as published by 
+-# the Free Software Foundation.
+-# 
+-# This program is distributed in the hope that it will be useful, but 
+-# WITHOUT ANY WARRANTY; without even the implied warranties of 
+-# MERCHANTABILITY, SATISFACTORY QUALITY or FITNESS FOR A PARTICULAR 
+-# PURPOSE.  See the applicable version of the GNU Lesser General Public 
+-# License for more details.
+-# 
+-# You should have received a copy of both the GNU Lesser General Public 
+-# License version 3 and version 2.1 along with this program.  If not, see 
+-# <http://www.gnu.org/licenses/>
+-
+-import argtypes
+-
+--- a/bindings/python/ayatana_appindicator.defs
++++ /dev/null
+@@ -1,200 +0,0 @@
+-;; -*- scheme -*-
+-; object definitions ...
+-(define-object Indicator
+-  (in-module "App")
+-  (parent "GObject")
+-  (c-name "AppIndicator")
+-  (gtype-id "APP_TYPE_INDICATOR")
+-)
+-
+-;; Enumerations and flags ...
+-
+-(define-enum IndicatorCategory
+-  (in-module "App")
+-  (c-name "AppIndicatorCategory")
+-  (gtype-id "APP_INDICATOR_TYPE_INDICATOR_CATEGORY")
+-  (values
+-    '("ApplicationStatus" "APP_INDICATOR_CATEGORY_APPLICATION_STATUS")
+-    '("Communications" "APP_INDICATOR_CATEGORY_COMMUNICATIONS")
+-    '("SystemServices" "APP_INDICATOR_CATEGORY_SYSTEM_SERVICES")
+-    '("Hardware" "APP_INDICATOR_CATEGORY_HARDWARE")
+-    '("Other" "APP_INDICATOR_CATEGORY_OTHER")
+-  )
+-)
+-
+-(define-enum IndicatorStatus
+-  (in-module "App")
+-  (c-name "AppIndicatorStatus")
+-  (gtype-id "APP_INDICATOR_TYPE_INDICATOR_STATUS")
+-  (values
+-    '("Passive" "APP_INDICATOR_STATUS_PASSIVE")
+-    '("Active" "APP_INDICATOR_STATUS_ACTIVE")
+-    '("NeedsAttention" "APP_INDICATOR_STATUS_ATTENTION")
+-  )
+-)
+-
+-;; From app-indicator.h
+-
+-(define-function app_indicator_get_type
+-  (c-name "app_indicator_get_type")
+-  (return-type "GType")
+-)
+-
+-(define-function app_indicator_new_with_path
+-  (c-name "app_indicator_new_with_path")
+-  (is-constructor-of "AppIndicator")
+-  (return-type "AppIndicator*")
+-  (parameters
+-    '("const-gchar*" "id")
+-    '("const-gchar*" "icon_name")
+-    '("AppIndicatorCategory" "category")
+-    '("const-gchar*" "icon_theme_path" (null-ok) (default "NULL"))
+-  )
+-)
+-
+-(define-method set_status
+-  (of-object "AppIndicator")
+-  (c-name "app_indicator_set_status")
+-  (return-type "none")
+-  (parameters
+-    '("AppIndicatorStatus" "status")
+-  )
+-)
+-
+-(define-method set_attention_icon
+-  (of-object "AppIndicator")
+-  (c-name "app_indicator_set_attention_icon_full")
+-  (return-type "none")
+-  (parameters
+-    '("const-gchar*" "icon_name")
+-    '("const-gchar*" "icon_desc" (null-ok) (default "NULL"))
+-  )
+-)
+-
+-(define-method set_menu
+-  (of-object "AppIndicator")
+-  (c-name "app_indicator_set_menu")
+-  (return-type "none")
+-  (parameters
+-    '("GtkMenu*" "menu")
+-  )
+-)
+-
+-(define-method set_icon
+-  (of-object "AppIndicator")
+-  (c-name "app_indicator_set_icon_full")
+-  (return-type "none")
+-  (parameters
+-    '("const-gchar*" "icon_name")
+-    '("const-gchar*" "icon_desc" (null-ok) (default "NULL"))
+-  )
+-)
+-
+-(define-method set_label
+-  (of-object "AppIndicator")
+-  (c-name "app_indicator_set_label")
+-  (return-type "none")
+-  (parameters
+-    '("const-gchar*" "label" (null-ok))
+-    '("const-gchar*" "guide" (null-ok) (default "NULL"))
+-  )
+-)
+-
+-(define-method set_ordering_index
+-  (of-object "AppIndicator")
+-  (c-name "app_indicator_set_ordering_index")
+-  (parameters
+-    '("guint32" "ordering_index")
+-  )
+-)
+-
+-(define-method set_icon_theme_path
+-  (of-object "AppIndicator")
+-  (c-name "app_indicator_set_icon_theme_path")
+-  (return-type "none")
+-  (parameters
+-    '("const-gchar*" "icon_theme_path" (null-ok))
+-  )
+-)
+-
+-(define-method get_id
+-  (of-object "AppIndicator")
+-  (c-name "app_indicator_get_id")
+-  (return-type "const-gchar*")
+-)
+-
+-(define-method get_category
+-  (of-object "AppIndicator")
+-  (c-name "app_indicator_get_category")
+-  (return-type "AppIndicatorCategory")
+-)
+-
+-(define-method get_status
+-  (of-object "AppIndicator")
+-  (c-name "app_indicator_get_status")
+-  (return-type "AppIndicatorStatus")
+-)
+-
+-(define-method get_icon
+-  (of-object "AppIndicator")
+-  (c-name "app_indicator_get_icon")
+-  (return-type "const-gchar*")
+-)
+-
+-(define-method get_icon_desc
+-  (of-object "AppIndicator")
+-  (c-name "app_indicator_get_icon_desc")
+-  (return-type "const-gchar*")
+-)
+-
+-(define-method get_icon_theme_path
+-  (of-object "AppIndicator")
+-  (c-name "app_indicator_get_icon_theme_path")
+-  (return-type "const-gchar*")
+-)
+-
+-(define-method get_attention_icon
+-  (of-object "AppIndicator")
+-  (c-name "app_indicator_get_attention_icon")
+-  (return-type "const-gchar*")
+-)
+-
+-(define-method get_attention_icon_desc
+-  (of-object "AppIndicator")
+-  (c-name "app_indicator_get_attention_icon_desc")
+-  (return-type "const-gchar*")
+-)
+-
+-(define-method get_menu
+-  (of-object "AppIndicator")
+-  (c-name "app_indicator_get_menu")
+-  (return-type "GtkMenu*")
+-)
+-
+-(define-method get_label
+-  (of-object "AppIndicator")
+-  (c-name "app_indicator_get_label")
+-  (return-type "const-gchar*")
+-)
+-
+-(define-method get_label_guide
+-  (of-object "AppIndicator")
+-  (c-name "app_indicator_get_label_guide")
+-  (return-type "const-gchar*")
+-)
+-
+-(define-method get_ordering_index
+-  (of-object "AppIndicator")
+-  (c-name "app_indicator_get_ordering_index")
+-  (return-type "guint32")
+-)
+-
+-(define-method build_menu_from_desktop
+-  (of-object "AppIndicator")
+-  (c-name "app_indicator_build_menu_from_desktop")
+-  (return-type "none")
+-  (parameters
+-    '("const-gchar*" "desktop_file")
+-    '("const-gchar*" "desktop_profile")
+-  )
+-)
+--- a/bindings/python/ayatana_appindicator.override.in
++++ /dev/null
+@@ -1,65 +0,0 @@
+-/*
+-Python bindings for libayatana-appindicator.
+-
+-Copyright 2009 Canonical Ltd.
+-
+-Authors:
+-    Eitan Isaacson <eitan@ascender.com> (original)
+-    Neil Jagdish Patel <neil.patel@canonical.com>
+-
+-This program is free software: you can redistribute it and/or modify it 
+-under the terms of either or both of the following licenses:
+-
+-1) the GNU Lesser General Public License version 3, as published by the 
+-Free Software Foundation; and/or
+-2) the GNU Lesser General Public License version 2.1, as published by 
+-the Free Software Foundation.
+-
+-This program is distributed in the hope that it will be useful, but 
+-WITHOUT ANY WARRANTY; without even the implied warranties of 
+-MERCHANTABILITY, SATISFACTORY QUALITY or FITNESS FOR A PARTICULAR 
+-PURPOSE.  See the applicable version of the GNU Lesser General Public 
+-License for more details.
+-
+-You should have received a copy of both the GNU Lesser General Public 
+-License version 3 and version 2.1 along with this program.  If not, see 
+-<http://www.gnu.org/licenses/>
+-*/
+-%%
+-headers
+-#include <Python.h>
+-#include "@top_srcdir@/src/app-indicator.h"
+-#include "@top_builddir@/src/app-indicator-enum-types.h"
+-#include <glib.h>
+-#include "pygobject.h"
+-#include "pyglib.h"
+-#include <pygtk/pygtk.h>
+-
+-typedef PyObject* (*to_pyobject_func) (gpointer data);
+-
+-#define APP_TYPE_INDICATOR APP_INDICATOR_TYPE
+-
+-void
+-_ayatana_appindicator_add_constants(PyObject *module, const gchar *strip_prefix)
+-{
+-#ifdef VERSION
+-        PyModule_AddStringConstant(module, "__version__", VERSION);
+-#endif
+-        pyg_enum_add(module,
+-                     "IndicatorCategory", 
+-                     strip_prefix,
+-                     APP_INDICATOR_TYPE_INDICATOR_CATEGORY);
+-
+-        pyg_enum_add(module,
+-                     "IndicatorStatus", 
+-                     strip_prefix,
+-                     APP_INDICATOR_TYPE_INDICATOR_STATUS);
+-
+-        if (PyErr_Occurred())
+-                PyErr_Print();
+-}
+-%%
+-modulename ayatana_appindicator
+-%%
+-import gobject.GObject as PyGObject_Type
+-import gtk.Menu as PyGtkMenu_Type
+--- a/bindings/python/ayatana_appindicatormodule.c
++++ /dev/null
+@@ -1,52 +0,0 @@
+-/*
+-Python bindings for libayatana-appindicator.
+-
+-Copyright 2009 Canonical Ltd.
+-Copyright 2015 Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
+-
+-Authors:
+-    Eitan Isaacson <eitan@ascender.com>
+-    Neil Jagdish Patel <neil.patel@canonical.com>
+-    Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
+-
+-This program is free software: you can redistribute it and/or modify it 
+-under the terms of either or both of the following licenses:
+-
+-1) the GNU Lesser General Public License version 3, as published by the 
+-Free Software Foundation; and/or
+-2) the GNU Lesser General Public License version 2.1, as published by 
+-the Free Software Foundation.
+-
+-This program is distributed in the hope that it will be useful, but 
+-WITHOUT ANY WARRANTY; without even the implied warranties of 
+-MERCHANTABILITY, SATISFACTORY QUALITY or FITNESS FOR A PARTICULAR 
+-PURPOSE.  See the applicable version of the GNU Lesser General Public 
+-License for more details.
+-
+-You should have received a copy of both the GNU Lesser General Public 
+-License version 3 and version 2.1 along with this program.  If not, see 
+-<http://www.gnu.org/licenses/>
+-*/
+-#include <pygobject.h>
+- 
+-void pyayatana_appindicator_register_classes (PyObject *d);
+-extern PyMethodDef pyayatana_appindicator_functions[];
+-void _ayatana_appindicator_add_constants(PyObject *m, const gchar *s);
+-
+-DL_EXPORT(void)
+-init_ayatana_appindicator(void)
+-{
+-		PyObject *m, *d;
+-		
+-		init_pygobject ();
+-		
+-		m = Py_InitModule ("_ayatana_appindicator", pyayatana_appindicator_functions);
+-		d = PyModule_GetDict (m);
+-		
+-		pyayatana_appindicator_register_classes (d);
+-
+-		_ayatana_appindicator_add_constants (m, "APP_INDICATOR_");
+-		if (PyErr_Occurred ()) {
+-				Py_FatalError ("can't initialise module ayatana_appindicator");
+-		}
+-}
+--- a/configure.ac
++++ b/configure.ac
+@@ -176,33 +176,6 @@
+ fi
+ AM_CONDITIONAL(BUILD_MONO_TEST, test x${have_nunit} = xyes)
+ 
+-###########################
+-# Python
+-###########################
+-
+-PYGTK_REQUIRED=2.14.0
+-PYGOBJECT_REQUIRED=0.22
+-
+-AM_PATH_PYTHON(2.3.5)
+-AM_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR(could not find Python headers)])
+-
+-PKG_CHECK_MODULES(APPINDICATOR_PYTHON,
+-                  [
+-					pygtk-2.0 >= $PYGTK_REQUIRED
+-					gtk+-2.0 >= $GTK_REQUIRED_VERSION
+-					pygobject-2.0 >= $PYGOBJECT_REQUIRED
+-                  ])
+-
+-AC_MSG_CHECKING(for pygtk defs)
+-PYGTK_DEFSDIR=`$PKG_CONFIG --variable=defsdir pygtk-2.0`
+-AC_SUBST(PYGTK_DEFSDIR)
+-AC_MSG_RESULT($PYGTK_DEFSDIR)
+-
+-AC_MSG_CHECKING(for pygtk codegen)
+-PYGTK_CODEGEN="$PYTHON `$PKG_CONFIG --variable=codegendir pygtk-2.0`/codegen.py"
+-AC_SUBST(PYGTK_CODEGEN)
+-AC_MSG_RESULT($PYGTK_CODEGEN)
+-
+ #########################
+ # Check if build tests
+ #########################
+@@ -234,8 +207,6 @@
+ src/ayatana-appindicator-0.1.pc
+ src/ayatana-appindicator3-0.1.pc
+ bindings/Makefile
+-bindings/python/Makefile
+-bindings/python/ayatana_appindicator.override
+ bindings/vala/Makefile
+ bindings/vala/examples/Makefile
+ tests/Makefile
