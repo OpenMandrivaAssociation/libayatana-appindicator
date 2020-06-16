@@ -28,6 +28,7 @@ BuildRequires:	pkgconfig(dbusmenu-glib-0.4)
 BuildRequires:	pkgconfig(dbusmenu-gtk3-0.4)
 BuildRequires:	pkgconfig(gobject-introspection-1.0)
 BuildRequires:	pkgconfig(gtk+-3.0)
+BuildRequires:  pkgconfig(gtk-doc)
 %if %{with mono}
 BuildRequires:	pkgconfig(gapi-2.0)
 BuildRequires:	pkgconfig(gtk-sharp-2.0)
@@ -119,7 +120,7 @@ ayatana-appindicator-sharp library.
 %autosetup -p1
 
 %build
-#NOCONFIGURE=1 ./autogen.sh
+NOCONFIGURE=1 ./autogen.sh
 
 %if %{with mono}
 export CSC=%{_bindir}/mcs
