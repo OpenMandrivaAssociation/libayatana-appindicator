@@ -7,7 +7,7 @@
 %bcond_with mono
 
 Name:		libayatana-appindicator
-Version:	0.5.4
+Version:	0.5.5
 Release:	1
 Summary:	Ayatana application indicators library
 License:	LGPLv2 AND LGPLv3 AND GPLv3
