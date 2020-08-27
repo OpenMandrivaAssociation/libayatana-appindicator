@@ -19,7 +19,7 @@ Patch0:		libayatanaappindicator-disable-werror.patch
 # Fix location of .pc files.
 Patch1:		libayatana-appindicator-fix-mono-dir.patch
 # Python2 is EOL
-Patch2:		libayatana-appindicator-drop-python2-code.patch
+#Patch2:		libayatana-appindicator-drop-python2-code.patch
 BuildRequires:	mate-common
 BuildRequires:	vala
 BuildRequires:	pkgconfig(ayatana-indicator3-0.4)
