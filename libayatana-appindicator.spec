@@ -7,7 +7,7 @@
 %bcond_with mono
 
 Name:		libayatana-appindicator
-Version:	0.5.4
+Version:	0.5.5
 Release:	1
 Summary:	Ayatana application indicators library
 License:	LGPLv2 AND LGPLv3 AND GPLv3
@@ -18,8 +18,7 @@ Source0:	https://github.com/AyatanaIndicators/libayatana-appindicator/archive/%{
 Patch0:		libayatanaappindicator-disable-werror.patch
 # Fix location of .pc files.
 Patch1:		libayatana-appindicator-fix-mono-dir.patch
-# Python2 is EOL
-Patch2:		libayatana-appindicator-drop-python2-code.patch
+
 BuildRequires:	mate-common
 BuildRequires:	vala
 BuildRequires:	pkgconfig(ayatana-indicator3-0.4)
