@@ -125,7 +125,7 @@ ayatana-appindicator-sharp library.
 export CSC=%{_bindir}/mcs
 %endif
 
-%cmake
+%cmake -DENABLE_BINDINGS_MONO=OFF
 %make_build
 
 %install
