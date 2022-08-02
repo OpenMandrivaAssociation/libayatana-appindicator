@@ -153,7 +153,7 @@ find %{buildroot} -name '*.la' -delete
 %{_datadir}/vala/vapi/ayatana-appindicator3-%{api}.*
 
 %files doc
-%{_datadir}/gtk-doc/html/%{name}/
+#{_datadir}/gtk-doc/html/%{name}/
 
 %if %{with mono}
 %files -n ayatana-appindicator-sharp
