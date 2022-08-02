@@ -15,7 +15,7 @@ Group:		System/Libraries
 URL:		https://ayatanaindicators.github.io/
 Source0:	https://github.com/AyatanaIndicators/libayatana-appindicator/archive/%{version}/%{name}-%{version}.tar.gz
 # Don't add -Werror on build: the code is aging and does not keep up.
-Patch0:		libayatanaappindicator-disable-werror.patch
+#Patch0:		libayatanaappindicator-disable-werror.patch
 # Fix location of .pc files.
 Patch1:		libayatana-appindicator-fix-mono-dir.patch
 
