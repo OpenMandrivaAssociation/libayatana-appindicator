@@ -17,7 +17,7 @@ Source0:	https://github.com/AyatanaIndicators/libayatana-appindicator/archive/%{
 # Don't add -Werror on build: the code is aging and does not keep up.
 #Patch0:		libayatanaappindicator-disable-werror.patch
 # Fix location of .pc files.
-Patch1:		libayatana-appindicator-fix-mono-dir.patch
+#Patch1:		libayatana-appindicator-fix-mono-dir.patch
 
 Buildrequires:	cmake
 BuildRequires:	mate-common
