@@ -125,7 +125,9 @@ ayatana-appindicator-sharp library.
 export CSC=%{_bindir}/mcs
 %endif
 
-%cmake -DENABLE_BINDINGS_MONO=OFF
+%cmake \
+        -DENABLE_BINDINGS_MONO=OFF \
+        -DENABLE_GTKDOC=ON
 %make_build
 
 %install
