@@ -7,18 +7,19 @@
 %bcond_with mono
 
 Name:		libayatana-appindicator
-Version:	0.5.5
-Release:	2
+Version:	0.5.91
+Release:	1
 Summary:	Ayatana application indicators library
 License:	LGPLv2 AND LGPLv3 AND GPLv3
 Group:		System/Libraries
 URL:		https://ayatanaindicators.github.io/
 Source0:	https://github.com/AyatanaIndicators/libayatana-appindicator/archive/%{version}/%{name}-%{version}.tar.gz
 # Don't add -Werror on build: the code is aging and does not keep up.
-Patch0:		libayatanaappindicator-disable-werror.patch
+#Patch0:		libayatanaappindicator-disable-werror.patch
 # Fix location of .pc files.
-Patch1:		libayatana-appindicator-fix-mono-dir.patch
+#Patch1:		libayatana-appindicator-fix-mono-dir.patch
 
+Buildrequires:	cmake
 BuildRequires:	mate-common
 BuildRequires:	vala
 BuildRequires:	pkgconfig(ayatana-indicator3-0.4)
@@ -119,21 +120,18 @@ ayatana-appindicator-sharp library.
 %autosetup -p1
 
 %build
-NOCONFIGURE=1 ./autogen.sh
 
 %if %{with mono}
 export CSC=%{_bindir}/mcs
 %endif
 
-%configure \
-	--disable-static  \
-	--enable-gtk-doc   \
-	--disable-mono-test \
-	--with-gtk=3
-%__make
+%cmake \
+        -DENABLE_BINDINGS_MONO=OFF \
+        -DENABLE_GTKDOC=ON
+%make_build
 
 %install
-%make_install
+%make_install -C build
 
 find %{buildroot} -name '*.la' -delete
 
