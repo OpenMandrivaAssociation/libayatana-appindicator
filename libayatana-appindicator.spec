@@ -140,17 +140,17 @@ find %{buildroot} -name '*.la' -delete
 
 %files -n %{libname}
 %license COPYING*
-%doc README
+%doc README*
 %{_libdir}/libayatana-appindicator3.so.%{major}{,.*}
 
 %files -n %{girayatananame}
 %license COPYING*
-%doc README
+%doc README*
 %{_libdir}/girepository-1.0/AyatanaAppIndicator3-%{api}.typelib
 
 %files -n %{develname}
 %license COPYING*
-%doc README
+%doc README*
 %{_includedir}/libayatana-appindicator3-%{api}/
 %{_libdir}/libayatana-appindicator3.so
 %{_libdir}/pkgconfig/ayatana-appindicator3-%{api}.pc
