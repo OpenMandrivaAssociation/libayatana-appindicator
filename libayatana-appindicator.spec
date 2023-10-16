@@ -1,3 +1,6 @@
+# Workaround for crap change in LLD 17.0
+%global build_ldflags %{build_ldflags} -Wl,--undefined-version
+
 %define api		0.1
 %define major		1
 %define libname		%mklibname ayatana-appindicator3_ %{major}
