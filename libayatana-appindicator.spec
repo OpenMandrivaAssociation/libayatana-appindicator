@@ -33,6 +33,7 @@ BuildRequires:	pkgconfig(gobject-introspection-1.0)
 BuildRequires:	pkgconfig(gtk+-3.0)
 BuildRequires:  pkgconfig(gtk4)
 BuildRequires:  pkgconfig(gtk-doc)
+BuildRequires:  pkgconfig(harfbuzz-gobject)
 %if %{with mono}
 BuildRequires:	pkgconfig(gapi-2.0)
 BuildRequires:	pkgconfig(gtk-sharp-2.0)
