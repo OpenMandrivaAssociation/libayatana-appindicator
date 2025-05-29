@@ -31,6 +31,7 @@ BuildRequires:	pkgconfig(dbusmenu-glib-0.4)
 BuildRequires:	pkgconfig(dbusmenu-gtk3-0.4)
 BuildRequires:	pkgconfig(gobject-introspection-1.0)
 BuildRequires:	pkgconfig(gtk+-3.0)
+BuildRequires:  pkgconfig(gtk4)
 BuildRequires:  pkgconfig(gtk-doc)
 %if %{with mono}
 BuildRequires:	pkgconfig(gapi-2.0)
