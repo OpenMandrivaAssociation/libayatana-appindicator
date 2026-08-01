@@ -22,7 +22,8 @@ Source0:	https://github.com/AyatanaIndicators/libayatana-appindicator/archive/%{
 # Fix location of .pc files.
 #Patch1:		libayatana-appindicator-fix-mono-dir.patch
 
-Buildrequires:	cmake
+BuildRequires:  make
+BuildRequires:	cmake
 BuildRequires:	mate-common
 BuildRequires:	vala
 BuildRequires:	pkgconfig(ayatana-indicator3-0.4)
